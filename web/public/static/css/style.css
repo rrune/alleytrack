@@ -18,8 +18,6 @@ body {
     color: var(--font);
     font-family: var(--sans-serif);
     text-align: center;
-
-    font-size: 1.3em;
 }
 
 a {
@@ -38,7 +36,6 @@ button, input[type=submit] {
     font-weight: bold;
     font-family: var(--sans-serif);
     background-color: var(--yellow);
-    font-size: 1.1em;
 }
 
 button:hover, input[type=submit]:hover {

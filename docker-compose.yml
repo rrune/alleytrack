@@ -1,0 +1,10 @@
+services:
+  web:
+    build: ./
+    container_name: alleytrack
+    ports:
+      - "12345:8080"
+    volumes:
+      - ./data:/app/data
+      - ./web:/app/web
+    restart: unless-stopped

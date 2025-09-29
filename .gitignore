@@ -1,0 +1,5 @@
+config.yml
+manifest.yml
+db.sqlite
+err.txt
+alleytrack.log

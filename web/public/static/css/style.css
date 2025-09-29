@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+:root {
+    --background: #1b1b1b;
+    --input: #2e2e2e;
+    --input-accent: #3a3a3a;
+    --font: #ebebeb;
+    --font-accent: #888888;
+    --yellow: #e0c753;
+
+    --sans-serif: 'Montserrat', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+
+    background-color: var(--background);
+    color: var(--font);
+    font-family: var(--sans-serif);
+    text-align: center;
+
+    font-size: 1.3em;
+}
+
+a {
+    color: var(--yellow);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button, input[type=submit] {
+    border-radius: 0;
+    border: none;
+    padding: 0.6em;
+    font-weight: bold;
+    font-family: var(--sans-serif);
+    background-color: var(--yellow);
+    font-size: 1.1em;
+}
+
+button:hover, input[type=submit]:hover {
+    cursor: pointer;
+}
+
+input[type=text], input[type=number], textarea {
+    background-color: var(--input);
+    border: none;
+    color: var(--font);
+    border-radius: 0;
+    padding: 1.4em;
+    margin: 8px 0;
+    box-sizing: border-box;
+    outline: none;
+    font-family: var(--sans-serif);
+}
+
+input[type=text]:focus, input[type=number]:focus {
+    outline: 3px solid var(--input-accent);
+}
+
+/* footer */
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+    color: var(--font-accent);
+}

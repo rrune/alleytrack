@@ -1,0 +1,18 @@
+{{template "header" .}}
+
+<p class="logo">{{.LogoText}}</p>
+
+{{if .Msg}}
+    <p>{{.Msg}}</p>
+{{end}}
+
+<form method="post">
+    <label for="name">Name</label>
+    <input id="name" type="text" placeholder="Name" name="name" required>
+    <label for="number">Number</label>
+    <input id="number" type="number" placeholder="Number" name="number" required>
+
+    <input type="submit" value="Login">
+</form>
+
+{{template "footer" .}}

@@ -1,0 +1,49 @@
+{{template "header" .}}
+
+<p class="logo">{{.LogoText}}</p>
+<span class="participant">{{.Name}} {{.Number}}</span>
+
+<h2>Unlocked:</h2>
+{{range .Unlocked}}
+<div class="checkpoint">
+    <div class="label">
+        Location <br>
+        Info <br>
+        {{if .Text}}
+        Answer <br>
+        {{end}}
+    </div>
+    <div class="info">
+        {{.Location}} <br>
+        {{.Info}} <br>
+        {{if .Text}}
+        {{.Content}}<br>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+<h2>Completed:</h2>
+{{range .Completed}}
+<div class="checkpoint">
+    <div class="label">
+        Location <br>
+        Info <br>
+        {{if .Text}}
+        Answer <br>
+        {{end}}
+    </div>
+    <div class="info">
+        {{.Location}} <br>
+        {{.Info}} <br>
+        {{if .Text}}
+        {{.Content}}<br>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+<a href="/logout">
+    <button>Logout</button>
+</a>
+{{template "footer" .}}

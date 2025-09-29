@@ -1,0 +1,27 @@
+.logo {
+    font-weight: bold;
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.participant {
+    color: var(--font-accent);
+}
+
+.checkpoint {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.checkpoint > * {
+    margin: 1em;
+}
+
+.label {
+    text-align: right;
+    color: var(--font-accent);
+}
+
+.info {
+    text-align: left;
+}

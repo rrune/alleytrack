@@ -1,0 +1,12 @@
+{{template "header" .}}
+
+<p class="logo">{{.Cp.Location}}</p>
+
+<p>{{.Cp.Info}}</p>
+
+<form method="post">
+    <textarea type="text" name="answer" required></textarea>
+    <input type="submit" value="Submit">
+</form>
+
+{{template "footer" .}}

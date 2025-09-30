@@ -1,0 +1,24 @@
+---
+- id: 1
+  link: aat
+  location: "Train Station"
+  info: "Very important information"
+  text: false
+  requirements:
+
+- id: 2
+  link: jsd
+  location: Theatre
+  info: "More important information"
+  text: false
+  requirements:
+  - 1
+
+- id: 3
+  link: hgr
+  location: Downtown
+  info: "What's your favourite food?"
+  text: true
+  requirements:
+  - 1
+  - 2

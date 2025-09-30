@@ -3,7 +3,6 @@ package models
 import "time"
 
 type Config struct {
-	Url           string `yaml:"url"`
 	Port          string `yaml:"port"`
 	JwtKey        string `yaml:"jwtKey"`
 	LogoText      string `yaml:"logoText"`

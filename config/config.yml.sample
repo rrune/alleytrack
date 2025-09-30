@@ -1,0 +1,5 @@
+port: "8080"
+jwtKey: "jwwwt"
+adminPassword: "alleytrack"
+
+logoText: "Alleytrack"

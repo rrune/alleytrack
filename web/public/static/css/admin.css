@@ -1,0 +1,23 @@
+.logo {
+    font-weight: bold;
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.particpant {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.particpant > * {
+    margin: 1em;
+}
+
+.label {
+    text-align: right;
+    color: var(--font-accent);
+}
+
+.info {
+    text-align: left;
+}

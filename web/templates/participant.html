@@ -1,0 +1,29 @@
+{{template "header" .}}
+
+<form action="" method="post">
+    <label for="name">Name</label>
+    <input id="name" type="text" placeholder="Name" name="name" value="{{.P.Name}}" required>
+    <label for="number">Number</label>
+    <input id="number" type="number" placeholder="Number" name="number" value="{{.P.Number}}" required readonly>
+    <div>
+        <label for="outoftown">Out of Town</label>
+        <input id="outoftown" type="checkbox" name="outoftown" {{if .P.OutOfTown}} checked {{end}}>
+    </div>
+    <div>
+        <label for="flinta">Flinta*</label>
+        <input id="flinta" type="checkbox" name="flinta" {{if .P.Flinta}} checked {{end}}>
+    </div>
+    <input type="submit" value="Submit">
+</form>
+
+{{range .Checkpoints}}
+    <div>
+        Checkpoint: {{.}}
+        <a href="/admin/removeCheckpoint/{{$.P.Number}}/{{.}}">Remove</a>
+    </div>
+    <br>
+{{end}}
+
+<a href="/admin/removeParticipant/{{.P.Number}}"><button>Remove Participant</button></a>
+
+{{template "footer" .}}

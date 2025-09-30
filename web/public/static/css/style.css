@@ -42,7 +42,7 @@ button:hover, input[type=submit]:hover {
     cursor: pointer;
 }
 
-input[type=text], input[type=number], textarea {
+input[type=text], input[type=number], input[type=password], textarea {
     background-color: var(--input);
     border: none;
     color: var(--font);
@@ -54,7 +54,7 @@ input[type=text], input[type=number], textarea {
     font-family: var(--sans-serif);
 }
 
-input[type=text]:focus, input[type=number]:focus {
+input[type=text]:focus, input[type=number]:focus, input[type=password]:focus {
     outline: 3px solid var(--input-accent);
 }
 
@@ -70,5 +70,10 @@ main {
 }
 
 footer {
+    padding-top: 2em;
+    color: var(--font-accent);
+}
+
+a.adminlogin{
     color: var(--font-accent);
 }

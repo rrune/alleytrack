@@ -15,8 +15,8 @@ func (r routes) HandleSignUp(c *fiber.Ctx) error {
 	// get form values
 	name := c.FormValue("name")
 	number := c.FormValue("number")
-	outoftown := c.FormValue("outoftown") == "outoftown"
-	flinta := c.FormValue("flinta") == "flinta"
+	outoftown := c.FormValue("outoftown") == "on"
+	flinta := c.FormValue("flinta") == "on"
 
 	// check if number is already taken
 	taken, err := r.DB.IsNumberTaken(number)
@@ -44,7 +44,7 @@ func (r routes) HandleSignUp(c *fiber.Ctx) error {
 		Flinta:    flinta,
 	})
 
-	err = setJwtCookie(c, r.Config.JwtKey, name, number)
+	err = setJwtCookie(c, r.Config.JwtKey, name, number, false)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -79,7 +79,7 @@ func (r routes) HandleLogin(c *fiber.Ctx) error {
 
 	// if number and name match
 	if strings.EqualFold(p.Name, name) {
-		err = setJwtCookie(c, r.Config.JwtKey, name, number)
+		err = setJwtCookie(c, r.Config.JwtKey, name, number, false)
 		if util.CheckWLogs(err) {
 			return c.SendStatus(500)
 		}
@@ -166,10 +166,11 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 	})
 }
 
-func setJwtCookie(c *fiber.Ctx, jwtKey string, name string, number string) error {
+func setJwtCookie(c *fiber.Ctx, jwtKey string, name string, number string, admin bool) error {
 	claims := jwt.MapClaims{
 		"name":   name,
 		"number": number,
+		"admin":  admin,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(jwtKey))

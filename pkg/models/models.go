@@ -3,12 +3,13 @@ package models
 import "time"
 
 type Config struct {
-	Url         string `yaml:"url"`
-	Port        string `yaml:"port"`
-	JwtKey      string `yaml:"jwtKey"`
-	LogoText    string `yaml:"logoText"`
-	WelcomeText string
-	Manifest    []Checkpoint
+	Url           string `yaml:"url"`
+	Port          string `yaml:"port"`
+	JwtKey        string `yaml:"jwtKey"`
+	LogoText      string `yaml:"logoText"`
+	AdminPassword string `yaml:"adminPassword"`
+	WelcomeText   string
+	Manifest      []Checkpoint
 }
 
 type Checkpoint struct {
@@ -19,6 +20,7 @@ type Checkpoint struct {
 	Text         bool   `yaml:"text"`
 	Requirements []int  `yaml:"requirements"`
 	Content      string
+	Time         string
 }
 
 type ParticipantCheckpoint struct {

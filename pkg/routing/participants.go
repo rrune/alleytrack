@@ -11,9 +11,9 @@ import (
 )
 
 func (r routes) Index(c *fiber.Ctx) error {
-	jwt := c.Cookies("JWT", "")
-	if jwt != "" {
-		c.Redirect("/manifest")
+	jwtCookie := c.Cookies("JWT", "")
+	if jwtCookie != "" {
+		return c.Redirect("/manifest")
 	}
 
 	return c.Render("index", fiber.Map{
@@ -45,15 +45,22 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	number := claims["number"].(string)
+	admin := claims["admin"].(bool)
+	if admin {
+		return c.Redirect("/admin")
+	}
 
 	num, err := strconv.Atoi(number)
 	if util.CheckWLogs(err) {
-		c.SendStatus(500)
+		return c.SendStatus(500)
 	}
 
-	p, _, err := r.DB.GetParicipantFromNumber(num)
+	p, exist, err := r.DB.GetParicipantFromNumber(num)
+	if !exist {
+		return c.Redirect("/logout")
+	}
 	if util.CheckWLogs(err) {
-		c.SendStatus(500)
+		return c.SendStatus(500)
 	}
 	completed := []models.Checkpoint{}
 	unlocked := []models.Checkpoint{}
@@ -67,6 +74,9 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 			if c.Text {
 				c.Content = p.Checkpoints[c.ID].Content
 			}
+
+			// inject time
+			c.Time = p.Checkpoints[c.ID].Time.Format("15:04:05")
 
 			completed = append(completed, c)
 
@@ -87,13 +97,14 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 	}
 
 	return c.Render("manifest", fiber.Map{
-		"Title":     "Manifest",
-		"CSS":       "manifest",
-		"LogoText":  "Manifest",
-		"Name":      p.Name,
-		"Number":    number,
-		"Completed": completed,
-		"Unlocked":  unlocked,
+		"Title":       "Manifest",
+		"CSS":         "manifest",
+		"LogoText":    "Manifest",
+		"Name":        p.Name,
+		"Number":      number,
+		"Completed":   completed,
+		"Unlocked":    unlocked,
+		"WelcomeText": r.Config.WelcomeText,
 	})
 }
 

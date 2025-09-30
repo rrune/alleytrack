@@ -29,6 +29,7 @@
     <div class="label">
         Location <br>
         Info <br>
+        Time <br>
         {{if .Text}}
         Answer <br>
         {{end}}
@@ -36,12 +37,15 @@
     <div class="info">
         {{.Location}} <br>
         {{.Info}} <br>
+        {{.Time}} <br>
         {{if .Text}}
         {{.Content}}<br>
         {{end}}
     </div>
 </div>
 {{end}}
+
+<p class="welcomeText">{{.WelcomeText}}</p>
 
 <a href="/logout">
     <button>Logout</button>

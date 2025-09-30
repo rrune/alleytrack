@@ -1,0 +1,26 @@
+{{template "header" .}}
+
+<p class="logo">{{.LogoText}}</p>
+
+<h2>Participants:</h2>
+{{range .Ps}}
+<div class="particpant">
+    <div class="label">
+        Name <br>
+        Number <br>
+        Out of Town <br>
+        Flinta <br>
+    </div>
+    <div class="info">
+        {{.Name}} <br>
+        <a href="admin/participant/{{.Number}}">{{.Number}}</a> <br>
+        {{.OutOfTown}}<br>
+        {{.Flinta}} <br>
+    </div>
+</div>
+{{end}}
+
+<a href="/logout">
+    <button>Logout</button>
+</a>
+{{template "footer" .}}

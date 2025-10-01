@@ -52,18 +52,15 @@ func (r routes) Participant(c *fiber.Ctx) error {
 		})
 	}
 
-	// get keys of completed checkpoints
-	keys := make([]int, len(p.Checkpoints))
-	i := 0
-	for k := range p.Checkpoints {
-		keys[i] = k
-		i++
+	for k, v := range p.Checkpoints {
+		v.ID = k
+		p.Checkpoints[k] = v
 	}
 
 	return c.Render("participant", fiber.Map{
 		"Title":       number,
 		"CSS":         "participant",
 		"P":           p,
-		"Checkpoints": keys,
+		"Checkpoints": p.Checkpoints,
 	})
 }

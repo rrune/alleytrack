@@ -1,6 +1,8 @@
 package router
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/gofiber/template/html/v2"
@@ -18,6 +20,12 @@ func Init(conf models.Config, data data.Data) {
 	r := routes{conf, data}
 
 	engine := html.New("./web/templates", ".html")
+	engine.AddFunc(
+		"formatDate", func(timestamp time.Time) string {
+			loc, _ := time.LoadLocation("Europe/Berlin")
+			return timestamp.In(loc).Format("15:04:05")
+		},
+	)
 	engine.Reload(true)
 
 	app := fiber.New(fiber.Config{

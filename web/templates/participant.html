@@ -17,13 +17,26 @@
 </form>
 
 {{range .Checkpoints}}
-    <div>
-        Checkpoint: {{.}}
-        <a href="/admin/removeCheckpoint/{{$.P.Number}}/{{.}}">Remove</a>
+    <div class="checkpoint">
+        <div class="label">
+            ID <br>
+            Time <br>
+            Answer <br>
+        </div>
+        <div class="info">
+            {{.ID}} <br>
+            {{formatDate .Time}} <br>
+            {{.Content}}<br>
+        </div>
     </div>
-    <br>
+    <a href="/admin/removeCheckpoint/{{$.P.Number}}/{{.ID}}">Remove</a>
 {{end}}
 
+<br>
+<br>
 <a href="/admin/removeParticipant/{{.P.Number}}"><button>Remove Participant</button></a>
+<br>
+<br>
+<a href="/logout"><button>Logout</button></a>
 
 {{template "footer" .}}

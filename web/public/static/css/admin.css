@@ -12,12 +12,3 @@
 .particpant > * {
     margin: 1em;
 }
-
-.label {
-    text-align: right;
-    color: var(--font-accent);
-}
-
-.info {
-    text-align: left;
-}

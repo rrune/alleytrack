@@ -19,12 +19,13 @@ type Checkpoint struct {
 	Text         bool   `yaml:"text"`
 	Requirements []int  `yaml:"requirements"`
 	Content      string
-	Time         string
+	Time         time.Time
 }
 
 type ParticipantCheckpoint struct {
 	Time    time.Time `json:"Time"`
 	Content string    `json:"Content"`
+	ID      int
 }
 
 type Participant struct {

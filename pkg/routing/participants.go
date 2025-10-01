@@ -76,7 +76,7 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 			}
 
 			// inject time
-			c.Time = p.Checkpoints[c.ID].Time.Format("15:04:05")
+			c.Time = p.Checkpoints[c.ID].Time
 
 			completed = append(completed, c)
 

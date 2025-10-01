@@ -81,3 +81,25 @@ footer {
 a.adminlogin{
     color: var(--font-accent);
 }
+
+.label {
+    text-align: right;
+    color: var(--font-accent);
+}
+
+.info {
+    text-align: left;
+}
+
+.welcomeText {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: justify;
+}
+
+@media (orientation: portrait) {
+    .welcomeText {
+        width: 100%;
+    }
+}

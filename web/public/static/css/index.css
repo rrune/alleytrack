@@ -19,3 +19,9 @@
 .buttons button {
     padding: 1em;
 }
+
+@media (orientation: portrait) {
+    .welcomeText {
+        width: 100%;
+    }
+}

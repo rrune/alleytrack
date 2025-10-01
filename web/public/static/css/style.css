@@ -20,6 +20,10 @@ body {
     text-align: center;
 }
 
+main {
+    margin: 0 1em;
+}
+
 a {
     color: var(--yellow);
     text-decoration: none;

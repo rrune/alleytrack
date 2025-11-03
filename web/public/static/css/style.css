@@ -89,13 +89,15 @@ a.adminlogin{
 
 .info {
     text-align: left;
+    overflow-wrap: break-word;
 }
 
 .welcomeText {
-    width: 70%;
+    width: 40%;
     margin-left: auto;
     margin-right: auto;
     text-align: justify;
+    white-space: pre-wrap;
 }
 
 @media (orientation: portrait) {

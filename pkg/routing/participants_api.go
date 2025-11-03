@@ -155,8 +155,8 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 				return c.SendStatus(500)
 			}
 			return c.Render("response", fiber.Map{
-				"Title": "Completed",
-				"Text":  "Congratulations",
+				"Title": "Checkpoint completed",
+				"Text":  "Succesfully completed Checkpoint. Congratulations!",
 			})
 		}
 	}

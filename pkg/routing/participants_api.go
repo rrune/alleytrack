@@ -157,7 +157,8 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 				return c.SendStatus(500)
 			}
 
-			util.WriteEvent(fmt.Sprintf("%s: %s (%s) just completed %s (%d) ", time.Now().Format("15:04:05"), name, number, ch.Location, ch.ID))
+			loc, _ := time.LoadLocation("Europe/Berlin")
+			util.WriteEvent(fmt.Sprintf("%s: %s (%s) just completed %s (%d) ", time.Now().In(loc).Format("15:04:05"), name, number, ch.Location, ch.ID))
 
 			return c.Render("response", fiber.Map{
 				"Title": "Checkpoint completed",

@@ -11,7 +11,7 @@ func (r routes) AdminLogin(c *fiber.Ctx) error {
 	return c.Render("adminlogin", fiber.Map{
 		"Title":    "Login",
 		"CSS":      "signup",
-		"LogoText": r.Config.LogoText,
+		"LogoText": r.Alleycat.Config.LogoText,
 		"Msg":      c.Query("msg", ""),
 	})
 }
@@ -27,6 +27,7 @@ func (r routes) Admin(c *fiber.Ctx) error {
 		"CSS":      "admin",
 		"LogoText": "Admin Panel",
 		"Ps":       ps,
+		"Enabled":  r.Alleycat.Config.Enabled,
 	})
 }
 

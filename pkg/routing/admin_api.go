@@ -17,8 +17,8 @@ func (r routes) HandleAdminLogin(c *fiber.Ctx) error {
 	password := c.FormValue("password")
 
 	// if number and name match
-	if password == r.Config.AdminPassword {
-		err := setJwtCookie(c, r.Config.JwtKey, "", "", true)
+	if password == r.Alleycat.Config.AdminPassword {
+		err := setJwtCookie(c, r.Alleycat.Config.JwtKey, "", "", true)
 		if util.CheckWLogs(err) {
 			return c.SendStatus(500)
 		}
@@ -130,6 +130,15 @@ func (r routes) HandleRemoveParticipant(c *fiber.Ctx) error {
 			"Title": "Unsuccessful",
 			"Text":  "Unsuccessful",
 		})
+	}
+
+	return c.Redirect("/admin")
+}
+
+func (r routes) HandleSwitchEnabled(c *fiber.Ctx) error {
+	err := util.SwitchEnabledInConfig(r.Alleycat)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
 	}
 
 	return c.Redirect("/admin")

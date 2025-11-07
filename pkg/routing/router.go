@@ -12,12 +12,12 @@ import (
 )
 
 type routes struct {
-	Config models.Config
-	DB     data.Data
+	Alleycat *models.Alleycat
+	DB       data.Data
 }
 
-func Init(conf models.Config, data data.Data) {
-	r := routes{conf, data}
+func Init(alleycat *models.Alleycat, data data.Data) {
+	r := routes{alleycat, data}
 
 	engine := html.New("./web/templates", ".html")
 	engine.AddFunc(
@@ -39,7 +39,7 @@ func Init(conf models.Config, data data.Data) {
 			return c.Redirect("/login?path=" + c.Path())
 		},
 		TokenLookup:   "cookie:JWT",
-		SigningKey:    []byte(r.Config.JwtKey),
+		SigningKey:    []byte(r.Alleycat.Config.JwtKey),
 		SigningMethod: "HS256",
 	})
 
@@ -49,7 +49,7 @@ func Init(conf models.Config, data data.Data) {
 			return c.Redirect("/adminlogin?path=" + c.Path())
 		},
 		TokenLookup:   "cookie:JWT",
-		SigningKey:    []byte(r.Config.JwtKey),
+		SigningKey:    []byte(r.Alleycat.Config.JwtKey),
 		SigningMethod: "HS256",
 	})
 
@@ -80,6 +80,7 @@ func Init(conf models.Config, data data.Data) {
 		return c.Next()
 	})
 	admin.Get("/", r.Admin)
+	admin.Get("/switchEnabled", r.HandleSwitchEnabled)
 	admin.Get("/participant/:number", r.Participant)
 	admin.Post("/participant/:number", r.HandleParticipant)
 	admin.Get("/removeCheckpoint/:number/:checkpoint", r.HandleRemoveCheckpoint)
@@ -90,7 +91,7 @@ func Init(conf models.Config, data data.Data) {
 	manifest.Get("/", r.Manifest)
 
 	// checkpoint endpoints
-	for _, c := range r.Config.Manifest {
+	for _, c := range r.Alleycat.Manifest {
 		if c.Text {
 			app.Get("/"+c.Link, pAuth, r.TextCheckpoint)
 			app.Post("/"+c.Link, pAuth, r.CompleteTextCheckpoint)
@@ -99,5 +100,5 @@ func Init(conf models.Config, data data.Data) {
 		}
 	}
 
-	app.Listen(":" + conf.Port)
+	app.Listen(":" + alleycat.Config.Port)
 }

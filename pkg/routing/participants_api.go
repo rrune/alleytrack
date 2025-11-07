@@ -44,7 +44,7 @@ func (r routes) HandleSignUp(c *fiber.Ctx) error {
 		Flinta:    flinta,
 	})
 
-	err = setJwtCookie(c, r.Config.JwtKey, name, number, false)
+	err = setJwtCookie(c, r.Alleycat.Config.JwtKey, name, number, false)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -79,7 +79,7 @@ func (r routes) HandleLogin(c *fiber.Ctx) error {
 
 	// if number and name match
 	if strings.EqualFold(p.Name, name) {
-		err = setJwtCookie(c, r.Config.JwtKey, name, number, false)
+		err = setJwtCookie(c, r.Alleycat.Config.JwtKey, name, number, false)
 		if util.CheckWLogs(err) {
 			return c.SendStatus(500)
 		}
@@ -147,7 +147,7 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 	}
 
 	// add the checkpoint to the completed ones
-	for _, ch := range r.Config.Manifest {
+	for _, ch := range r.Alleycat.Manifest {
 		if ch.Link == link {
 			p.Checkpoints[ch.ID] = models.ParticipantCheckpoint{Time: time.Now(), Content: content}
 			err = r.DB.UpdateCheckpoints(p)

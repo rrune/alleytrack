@@ -22,26 +22,26 @@ func main() {
 	log.SetFlags(2 | 3)
 
 	// read config
-	var config models.Config
+	var alleycat models.Alleycat
 	ymlData, err := os.ReadFile("./config/config.yml")
 	util.CheckPanic(err)
-	err = yaml.Unmarshal(ymlData, &config)
+	err = yaml.Unmarshal(ymlData, &alleycat.Config)
 	util.CheckPanic(err)
 
 	// read welcome text
 	wel, err := os.ReadFile("./config/welcome.txt")
 	util.CheckPanic(err)
-	config.WelcomeText = string(wel)
+	alleycat.WelcomeText = string(wel)
 
 	// read manifest
 	manifest, err := os.ReadFile("./config/manifest.yml")
 	util.CheckPanic(err)
-	err = yaml.Unmarshal(manifest, &config.Manifest)
+	err = yaml.Unmarshal(manifest, &alleycat.Manifest)
 	util.CheckPanic(err)
 
 	// init database
 	db, err := data.Init()
 	util.CheckPanic(err)
 
-	routing.Init(config, db)
+	routing.Init(&alleycat, db)
 }

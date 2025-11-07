@@ -2,13 +2,18 @@ package models
 
 import "time"
 
-type Config struct {
+type config struct {
+	Enabled       bool   `yaml:"enabled"`
 	Port          string `yaml:"port"`
 	JwtKey        string `yaml:"jwtKey"`
 	LogoText      string `yaml:"logoText"`
 	AdminPassword string `yaml:"adminPassword"`
-	WelcomeText   string
-	Manifest      []Checkpoint
+}
+
+type Alleycat struct {
+	WelcomeText string
+	Manifest    []Checkpoint
+	Config      config
 }
 
 type Checkpoint struct {

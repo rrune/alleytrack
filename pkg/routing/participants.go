@@ -17,10 +17,10 @@ func (r routes) Index(c *fiber.Ctx) error {
 	}
 
 	return c.Render("index", fiber.Map{
-		"Title":       r.Config.LogoText,
+		"Title":       r.Alleycat.Config.LogoText,
 		"CSS":         "index",
-		"LogoText":    r.Config.LogoText,
-		"WelcomeText": r.Config.WelcomeText,
+		"LogoText":    r.Alleycat.Config.LogoText,
+		"WelcomeText": r.Alleycat.WelcomeText,
 	})
 }
 
@@ -28,7 +28,7 @@ func (r routes) SignUp(c *fiber.Ctx) error {
 	return c.Render("signup", fiber.Map{
 		"Title":    "Sign Up",
 		"CSS":      "signup",
-		"LogoText": r.Config.LogoText,
+		"LogoText": r.Alleycat.Config.LogoText,
 	})
 }
 
@@ -36,7 +36,7 @@ func (r routes) Login(c *fiber.Ctx) error {
 	return c.Render("login", fiber.Map{
 		"Title":    "Login",
 		"CSS":      "signup",
-		"LogoText": r.Config.LogoText,
+		"LogoText": r.Alleycat.Config.LogoText,
 		"Msg":      c.Query("msg", ""),
 	})
 }
@@ -64,34 +64,37 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 	}
 	completed := []models.Checkpoint{}
 	unlocked := []models.Checkpoint{}
-	// loop through every checkpoint
-	for _, c := range r.Config.Manifest {
-		// if the id is in the participants list, add the checkpoint to completed
-		_, ok := p.Checkpoints[c.ID]
-		if ok {
 
-			// if text input checkpoint, inject answer
-			if c.Text {
-				c.Content = p.Checkpoints[c.ID].Content
-			}
+	if r.Alleycat.Config.Enabled {
+		// loop through every checkpoint
+		for _, c := range r.Alleycat.Manifest {
+			// if the id is in the participants list, add the checkpoint to completed
+			_, ok := p.Checkpoints[c.ID]
+			if ok {
 
-			// inject time
-			c.Time = p.Checkpoints[c.ID].Time
-
-			completed = append(completed, c)
-
-			// if its not, check if the requirements are met
-		} else {
-			// loop through every requirement and check if its met
-			met := true
-			for _, id := range c.Requirements {
-				_, ok := p.Checkpoints[id]
-				if !ok {
-					met = false
+				// if text input checkpoint, inject answer
+				if c.Text {
+					c.Content = p.Checkpoints[c.ID].Content
 				}
-			}
-			if met {
-				unlocked = append(unlocked, c)
+
+				// inject time
+				c.Time = p.Checkpoints[c.ID].Time
+
+				completed = append(completed, c)
+
+				// if its not, check if the requirements are met
+			} else {
+				// loop through every requirement and check if its met
+				met := true
+				for _, id := range c.Requirements {
+					_, ok := p.Checkpoints[id]
+					if !ok {
+						met = false
+					}
+				}
+				if met {
+					unlocked = append(unlocked, c)
+				}
 			}
 		}
 	}
@@ -104,7 +107,7 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 		"Number":      number,
 		"Completed":   completed,
 		"Unlocked":    unlocked,
-		"WelcomeText": r.Config.WelcomeText,
+		"WelcomeText": r.Alleycat.WelcomeText,
 	})
 }
 
@@ -114,7 +117,7 @@ func (r routes) TextCheckpoint(c *fiber.Ctx) error {
 	link := spl[len(spl)-1]
 
 	var cp models.Checkpoint
-	for _, ch := range r.Config.Manifest {
+	for _, ch := range r.Alleycat.Manifest {
 		if ch.Link == link {
 			cp = ch
 		}

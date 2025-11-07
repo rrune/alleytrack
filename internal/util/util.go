@@ -50,7 +50,7 @@ func SwitchEnabledInConfig(alleycat *models.Alleycat) (err error) {
 }
 
 func WriteEvent(event string) (err error) {
-	f, err := os.OpenFile("./data/event.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	f, err := os.OpenFile("./data/event.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if Check(err) {
 		return
 	}

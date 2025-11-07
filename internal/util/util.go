@@ -55,6 +55,6 @@ func WriteEvent(event string) (err error) {
 		return
 	}
 	defer f.Close()
-	_, err = f.WriteString(event)
+	_, err = f.WriteString("\n" + event)
 	return
 }

@@ -48,3 +48,17 @@ func SwitchEnabledInConfig(alleycat *models.Alleycat) (err error) {
 	err = os.WriteFile("./config/config.yml", confByte, 0644)
 	return
 }
+
+func WriteEvent(event string) (err error) {
+	f, err := os.OpenFile("./data/event.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		return
+	}
+
+	defer f.Close()
+
+	if _, err = f.WriteString(event); err != nil {
+		return
+	}
+	return
+}

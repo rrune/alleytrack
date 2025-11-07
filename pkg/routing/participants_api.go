@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -130,6 +131,7 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	number := claims["number"].(string)
+	name := claims["name"].(string)
 
 	num, err := strconv.Atoi(number)
 	if util.CheckWLogs(err) {
@@ -154,6 +156,9 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 			if util.CheckWLogs(err) {
 				return c.SendStatus(500)
 			}
+
+			util.WriteEvent(fmt.Sprintf("%s: %s (%s) just completed %s (%d) ", time.Now().Format("15:04:05"), name, number, ch.Location, ch.ID))
+
 			return c.Render("response", fiber.Map{
 				"Title": "Checkpoint completed",
 				"Text":  "Succesfully completed Checkpoint. Congratulations!",

@@ -60,6 +60,8 @@ func Init(alleycat *models.Alleycat, data data.Data) {
 	app.Get("/signup", r.SignUp)
 	app.Get("/login", r.Login)
 	app.Get("/logout", r.HandleLogout)
+	app.Get("/help", r.HelpList)
+	app.Get("/help/:link", r.Help)
 
 	// api
 	app.Get("/isNumberTaken/:number", r.IsNumerTaken)

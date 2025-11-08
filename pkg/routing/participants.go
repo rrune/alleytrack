@@ -129,3 +129,19 @@ func (r routes) TextCheckpoint(c *fiber.Ctx) error {
 		"Cp":    cp,
 	})
 }
+
+func (r routes) HelpList(c *fiber.Ctx) error {
+	return c.Render("helpList", fiber.Map{
+		"Title":       "Help",
+		"Checkpoints": r.Alleycat.Manifest,
+	})
+}
+
+func (r routes) Help(c *fiber.Ctx) error {
+	link := c.Params("link", "")
+
+	return c.Render("help", fiber.Map{
+		"Title": "Help",
+		"Link":  link,
+	})
+}

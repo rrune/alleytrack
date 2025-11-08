@@ -60,7 +60,7 @@ func Init(alleycat *models.Alleycat, data data.Data) {
 	app.Get("/signup", r.SignUp)
 	app.Get("/login", r.Login)
 	app.Get("/logout", r.HandleLogout)
-	app.Get("/help", r.HelpList)
+	//app.Get("/help", r.HelpList)
 	app.Get("/help/:link", r.Help)
 
 	// api
@@ -87,6 +87,8 @@ func Init(alleycat *models.Alleycat, data data.Data) {
 	admin.Post("/participant/:number", r.HandleParticipant)
 	admin.Get("/removeCheckpoint/:number/:checkpoint", r.HandleRemoveCheckpoint)
 	admin.Get("/removeParticipant/:number", r.HandleRemoveParticipant)
+
+	admin.Get("/help", r.HelpList)
 
 	// manifest
 	manifest := app.Group("/manifest", pAuth)

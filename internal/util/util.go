@@ -3,9 +3,6 @@ package util
 import (
 	"log"
 	"os"
-
-	"github.com/rrune/alleytrack/pkg/models"
-	"gopkg.in/yaml.v2"
 )
 
 func Check(err error) (r bool) {
@@ -36,17 +33,6 @@ func CheckPanic(err error) {
 		}
 		panic(err)
 	}
-}
-
-func SwitchEnabledInConfig(alleycat *models.Alleycat) (err error) {
-	alleycat.Config.Enabled = !alleycat.Config.Enabled
-
-	confByte, err := yaml.Marshal(alleycat.Config)
-	if Check(err) {
-		return
-	}
-	err = os.WriteFile("./config/config.yml", confByte, 0644)
-	return
 }
 
 func WriteEvent(event string) (err error) {

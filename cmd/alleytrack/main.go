@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/rrune/alleytrack/internal/util"
+	"github.com/rrune/alleytrack/pkg/config"
 	"github.com/rrune/alleytrack/pkg/data"
 	"github.com/rrune/alleytrack/pkg/models"
 	routing "github.com/rrune/alleytrack/pkg/routing"
@@ -34,14 +35,17 @@ func main() {
 	alleycat.WelcomeText = string(wel)
 
 	// read manifest
-	manifest, err := os.ReadFile("./config/manifest.yml")
-	util.CheckPanic(err)
-	err = yaml.Unmarshal(manifest, &alleycat.Manifest)
-	util.CheckPanic(err)
+	/* 	manifest, err := os.ReadFile("./config/manifest.yml")
+	   	util.CheckPanic(err)
+	   	err = yaml.Unmarshal(manifest, &alleycat.Manifest)
+	   	util.CheckPanic(err) */
 
 	// init database
 	db, err := data.Init()
 	util.CheckPanic(err)
 
-	routing.Init(&alleycat, db)
+	err = config.ReadManifestIntoDatabase("./config/manifest.yml", &db)
+	util.CheckPanic(err)
+
+	util.CheckPanic(routing.Init(&alleycat, &db))
 }

@@ -7,16 +7,17 @@ import (
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/gofiber/template/html/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/rrune/alleytrack/internal/util"
 	"github.com/rrune/alleytrack/pkg/data"
 	"github.com/rrune/alleytrack/pkg/models"
 )
 
 type routes struct {
 	Alleycat *models.Alleycat
-	DB       data.Data
+	DB       *data.Data
 }
 
-func Init(alleycat *models.Alleycat, data data.Data) {
+func Init(alleycat *models.Alleycat, data *data.Data) (err error) {
 	r := routes{alleycat, data}
 
 	engine := html.New("./web/templates", ".html")
@@ -95,7 +96,12 @@ func Init(alleycat *models.Alleycat, data data.Data) {
 	manifest.Get("/", r.Manifest)
 
 	// checkpoint endpoints
-	for _, c := range r.Alleycat.Manifest {
+	chs, err := data.Checkpoints.GetAll()
+	if util.Check(err) {
+		return
+	}
+
+	for _, c := range chs {
 		if c.Text {
 			app.Get("/"+c.Link, pAuth, r.TextCheckpoint)
 			app.Post("/"+c.Link, pAuth, r.CompleteTextCheckpoint)
@@ -105,4 +111,6 @@ func Init(alleycat *models.Alleycat, data data.Data) {
 	}
 
 	app.Listen(":" + alleycat.Config.Port)
+
+	return
 }

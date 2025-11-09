@@ -19,31 +19,34 @@ func (r routes) HandleSignUp(c *fiber.Ctx) error {
 	outoftown := c.FormValue("outoftown") == "on"
 	flinta := c.FormValue("flinta") == "on"
 
-	// check if number is already taken
-	taken, err := r.DB.IsNumberTaken(number)
-	if util.CheckWLogs(err) {
-		return c.SendStatus(500)
-	}
-	if taken {
-		return c.Render("response", fiber.Map{
-			"Title": "Taken",
-			"Text":  "Number is already taken. Sorry",
-		})
-	}
-
 	// convert number to int
 	num, err := strconv.Atoi(number)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
 
+	// check if number is already taken
+	_, exists, err := r.DB.Participants.GetByNumber(num)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
+	}
+	if exists {
+		return c.Render("response", fiber.Map{
+			"Title": "Taken",
+			"Text":  "Number is already taken. Sorry",
+		})
+	}
+
 	// add participant to database
-	r.DB.NewParticipant(models.Participant{
+	err = r.DB.Participants.Add(models.Participant{
 		Name:      name,
 		Number:    num,
 		OutOfTown: outoftown,
 		Flinta:    flinta,
 	})
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
+	}
 
 	err = setJwtCookie(c, r.Alleycat.Config.JwtKey, name, number, false)
 	if util.CheckWLogs(err) {
@@ -70,7 +73,7 @@ func (r routes) HandleLogin(c *fiber.Ctx) error {
 	}
 
 	// check if number exists
-	p, exists, err := r.DB.GetParicipantFromNumber(num)
+	p, exists, err := r.DB.Participants.GetByNumber(num)
 	if !exists {
 		return c.Redirect("/login?msg=Number doesnt exist&path=" + CallbackPath)
 	}
@@ -103,11 +106,17 @@ func (r routes) IsNumerTaken(c *fiber.Ctx) error {
 		return c.SendStatus(400)
 	}
 
-	taken, err := r.DB.IsNumberTaken(number)
+	// number to int
+	num, err := strconv.Atoi(number)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
-	if taken {
+
+	_, exist, err := r.DB.Participants.GetByNumber(num)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
+	}
+	if exist {
 		return c.SendString("true")
 	}
 	return c.SendString("false")
@@ -138,37 +147,21 @@ func (r routes) completeCheckpoint(c *fiber.Ctx, content string) error {
 		return c.SendStatus(500)
 	}
 
-	// get participant
-	p, _, err := r.DB.GetParicipantFromNumber(num)
+	// get checkpoint
+	ch, _, err := r.DB.Checkpoints.GetByLink(link)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
 
-	if len(p.Checkpoints) == 0 {
-		p.Checkpoints = make(map[int]models.ParticipantCheckpoint)
-	}
-
 	// add the checkpoint to the completed ones
-	for _, ch := range r.Alleycat.Manifest {
-		if ch.Link == link {
-			p.Checkpoints[ch.ID] = models.ParticipantCheckpoint{Time: time.Now(), Content: content}
-			err = r.DB.UpdateCheckpoints(p)
-			if util.CheckWLogs(err) {
-				return c.SendStatus(500)
-			}
+	r.DB.ParticipantsCheckpoints.Add(num, ch.ID, content)
 
-			loc, _ := time.LoadLocation("Europe/Berlin")
-			util.WriteEvent(fmt.Sprintf("%s: %s (%s) just completed %s (%d) ", time.Now().In(loc).Format("15:04:05"), name, number, ch.Location, ch.ID))
+	loc, _ := time.LoadLocation("Europe/Berlin")
+	util.WriteEvent(fmt.Sprintf("%s: %s (%s) just completed %s (%d) ", time.Now().In(loc).Format("15:04:05"), name, number, ch.Location, ch.ID))
 
-			return c.Render("response", fiber.Map{
-				"Title": "Checkpoint completed",
-				"Text":  "Succesfully completed Checkpoint. Congratulations!",
-			})
-		}
-	}
 	return c.Render("response", fiber.Map{
-		"Title": "Something went wrong...",
-		"Text":  "Hmmm",
+		"Title": "Checkpoint completed",
+		"Text":  "Succesfully completed Checkpoint. Congratulations!",
 	})
 }
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/rrune/alleytrack/internal/util"
+	"github.com/rrune/alleytrack/pkg/config"
 )
 
 func (r routes) HandleAdminLogin(c *fiber.Ctx) error {
@@ -48,7 +49,7 @@ func (r routes) HandleParticipant(c *fiber.Ctx) error {
 	outoftown := c.FormValue("outoftown") == "on"
 	flinta := c.FormValue("flinta") == "on"
 
-	p, exists, err := r.DB.GetParicipantFromNumber(num)
+	p, exists, err := r.DB.Participants.GetByNumber(num)
 	if !exists {
 		return c.Render("response", fiber.Map{
 			"Title": "Number does not exist",
@@ -63,7 +64,7 @@ func (r routes) HandleParticipant(c *fiber.Ctx) error {
 	p.OutOfTown = outoftown
 	p.Flinta = flinta
 
-	err = r.DB.UpdateParticipant(p)
+	_, err = r.DB.Participants.UpdateByNumber(p.Number, p)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -91,20 +92,7 @@ func (r routes) HandleRemoveCheckpoint(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	p, exists, err := r.DB.GetParicipantFromNumber(num)
-	if !exists {
-		return c.Render("response", fiber.Map{
-			"Title": "Number does not exist",
-			"Text":  "Number does not exist",
-		})
-	}
-	if util.CheckWLogs(err) {
-		return c.SendStatus(500)
-	}
-
-	delete(p.Checkpoints, ch)
-
-	err = r.DB.UpdateCheckpoints(p)
+	_, err = r.DB.ParticipantsCheckpoints.Remove(num, ch)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -120,8 +108,12 @@ func (r routes) HandleRemoveParticipant(c *fiber.Ctx) error {
 			"Text":  "Missing Data",
 		})
 	}
+	num, err := strconv.Atoi(number)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
+	}
 
-	exists, err := r.DB.RemoveParticipantByNumber(number)
+	exists, err := r.DB.Participants.RemoveByNumber(num)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -136,7 +128,7 @@ func (r routes) HandleRemoveParticipant(c *fiber.Ctx) error {
 }
 
 func (r routes) HandleSwitchEnabled(c *fiber.Ctx) error {
-	err := util.SwitchEnabledInConfig(r.Alleycat)
+	err := config.SwitchEnabledInConfig(r.Alleycat)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}

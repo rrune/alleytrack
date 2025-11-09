@@ -12,7 +12,6 @@ type config struct {
 
 type Alleycat struct {
 	WelcomeText string
-	Manifest    []Checkpoint
 	Config      config
 }
 
@@ -27,16 +26,9 @@ type Checkpoint struct {
 	Time         time.Time
 }
 
-type ParticipantCheckpoint struct {
-	Time    time.Time `json:"Time"`
-	Content string    `json:"Content"`
-	ID      int
-}
-
 type Participant struct {
-	Number      int
-	Name        string
-	OutOfTown   bool
-	Flinta      bool
-	Checkpoints map[int]ParticipantCheckpoint
+	Number    int
+	Name      string
+	OutOfTown bool
+	Flinta    bool
 }

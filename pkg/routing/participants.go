@@ -7,7 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/rrune/alleytrack/internal/util"
-	"github.com/rrune/alleytrack/pkg/models"
 )
 
 func (r routes) Index(c *fiber.Ctx) error {
@@ -55,48 +54,22 @@ func (r routes) Manifest(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	p, exist, err := r.DB.GetParicipantFromNumber(num)
+	p, exist, err := r.DB.Participants.GetByNumber(num)
 	if !exist {
 		return c.Redirect("/logout")
 	}
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
-	completed := []models.Checkpoint{}
-	unlocked := []models.Checkpoint{}
 
-	if r.Alleycat.Config.Enabled {
-		// loop through every checkpoint
-		for _, c := range r.Alleycat.Manifest {
-			// if the id is in the participants list, add the checkpoint to completed
-			_, ok := p.Checkpoints[c.ID]
-			if ok {
+	completed, err := r.DB.ParticipantsCheckpoints.GetCompleted(num)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
+	}
 
-				// if text input checkpoint, inject answer
-				if c.Text {
-					c.Content = p.Checkpoints[c.ID].Content
-				}
-
-				// inject time
-				c.Time = p.Checkpoints[c.ID].Time
-
-				completed = append(completed, c)
-
-				// if its not, check if the requirements are met
-			} else {
-				// loop through every requirement and check if its met
-				met := true
-				for _, id := range c.Requirements {
-					_, ok := p.Checkpoints[id]
-					if !ok {
-						met = false
-					}
-				}
-				if met {
-					unlocked = append(unlocked, c)
-				}
-			}
-		}
+	unlocked, err := r.DB.CheckpointDependencies.GetAvailableByNumber(num)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
 	}
 
 	return c.Render("manifest", fiber.Map{
@@ -116,11 +89,9 @@ func (r routes) TextCheckpoint(c *fiber.Ctx) error {
 	spl := strings.Split(c.OriginalURL(), "/")
 	link := spl[len(spl)-1]
 
-	var cp models.Checkpoint
-	for _, ch := range r.Alleycat.Manifest {
-		if ch.Link == link {
-			cp = ch
-		}
+	cp, _, err := r.DB.Checkpoints.GetByLink(link)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
 	}
 
 	return c.Render("checkpoint", fiber.Map{
@@ -131,9 +102,14 @@ func (r routes) TextCheckpoint(c *fiber.Ctx) error {
 }
 
 func (r routes) HelpList(c *fiber.Ctx) error {
+	chs, err := r.DB.Checkpoints.GetAll()
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
+	}
+
 	return c.Render("helpList", fiber.Map{
 		"Title":       "Help",
-		"Checkpoints": r.Alleycat.Manifest,
+		"Checkpoints": chs,
 	})
 }
 

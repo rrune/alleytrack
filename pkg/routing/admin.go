@@ -17,7 +17,7 @@ func (r routes) AdminLogin(c *fiber.Ctx) error {
 }
 
 func (r routes) Admin(c *fiber.Ctx) error {
-	ps, err := r.DB.GetAllParticipants()
+	ps, err := r.DB.Participants.GetAll()
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -42,7 +42,7 @@ func (r routes) Participant(c *fiber.Ctx) error {
 		})
 	}
 
-	p, exists, err := r.DB.GetParicipantFromNumber(num)
+	p, exists, err := r.DB.Participants.GetByNumber(num)
 	if util.CheckWLogs(err) {
 		return c.SendStatus(500)
 	}
@@ -53,15 +53,15 @@ func (r routes) Participant(c *fiber.Ctx) error {
 		})
 	}
 
-	for k, v := range p.Checkpoints {
-		v.ID = k
-		p.Checkpoints[k] = v
+	checkpoints, err := r.DB.ParticipantsCheckpoints.GetCompleted(num)
+	if util.CheckWLogs(err) {
+		return c.SendStatus(500)
 	}
 
 	return c.Render("participant", fiber.Map{
 		"Title":       number,
 		"CSS":         "participant",
 		"P":           p,
-		"Checkpoints": p.Checkpoints,
+		"Checkpoints": checkpoints,
 	})
 }

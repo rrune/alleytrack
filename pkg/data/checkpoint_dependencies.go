@@ -27,7 +27,7 @@ type checkpointDependencies struct {
 
 func (c checkpointDependencies) Create() (err error) {
 	_, err = c.DB.Exec(`
-	CREATE TABLE checkpoint_dependencies (
+	CREATE TABLE IF NOT EXISTS checkpoint_dependencies (
     	checkpoint_id INTEGER NOT NULL REFERENCES checkpoints(id) ON DELETE CASCADE,
     	required_checkpoint_id INTEGER NOT NULL REFERENCES checkpoints(id) ON DELETE CASCADE,
     	PRIMARY KEY (checkpoint_id, required_checkpoint_id),

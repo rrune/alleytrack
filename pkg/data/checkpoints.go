@@ -120,22 +120,13 @@ func (c checkpoints) GetByLink(link string) (ch models.Checkpoint, exists bool, 
 }
 
 func (c checkpoints) UpdateById(id int, ch models.Checkpoint) (success bool, err error) {
-	_, exists, err := c.GetById(id)
-	if util.Check(err) {
-		return
-	}
-	if exists {
-		return false, err
-	}
 	res, err := c.DB.Exec(`
 	UPDATE checkpoints SET 
-		id = ?, 
 		link = ?, 
 		location = ?, 
 		info = ?,
 		text = ? 
 	WHERE id = ?`,
-		ch.ID,
 		ch.Link,
 		ch.Location,
 		ch.Info,

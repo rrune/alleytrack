@@ -127,7 +127,7 @@ func (c checkpoints) UpdateById(id int, ch models.Checkpoint) (success bool, err
 	if exists {
 		return false, err
 	}
-	_, err = c.DB.Exec(`
+	res, err := c.DB.Exec(`
 	UPDATE checkpoints SET 
 		id = ?, 
 		link = ?, 
@@ -142,7 +142,11 @@ func (c checkpoints) UpdateById(id int, ch models.Checkpoint) (success bool, err
 		ch.Text,
 		id,
 	)
-	return true, err
+	if util.Check(err) {
+		return
+	}
+	affected, err := res.RowsAffected()
+	return affected > 0, err
 }
 
 func (c checkpoints) RemoveById(id int) (exists bool, err error) {

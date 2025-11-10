@@ -100,7 +100,7 @@ func (p participants) GetByNumber(number int) (pt models.Participant, exists boo
 }
 
 func (p participants) UpdateByNumber(number int, pt models.Participant) (success bool, err error) {
-	_, err = p.DB.Exec(`
+	res, err := p.DB.Exec(`
 	UPDATE participants SET 
 		number = ?, 
 		name = ?, 
@@ -113,7 +113,11 @@ func (p participants) UpdateByNumber(number int, pt models.Participant) (success
 		pt.Flinta,
 		number,
 	)
-	return true, err
+	if util.Check(err) {
+		return
+	}
+	affected, err := res.RowsAffected()
+	return affected > 0, err
 }
 
 func (p participants) RemoveByNumber(number int) (exists bool, err error) {

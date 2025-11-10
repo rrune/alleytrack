@@ -41,7 +41,7 @@ func main() {
 	   	util.CheckPanic(err) */
 
 	// init database
-	db, err := data.Init()
+	db, err := data.Init("./data/db.sqlite")
 	util.CheckPanic(err)
 
 	err = config.ReadManifestIntoDatabase("./config/manifest.yml", &db)

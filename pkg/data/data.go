@@ -12,10 +12,11 @@ type Data struct {
 	Checkpoints             Checkpoints
 	ParticipantsCheckpoints ParticipantsCheckpoints
 	CheckpointDependencies  CheckpointDependencies
+	DB                      *sql.DB
 }
 
-func Init() (d Data, err error) {
-	db, err := sql.Open("sqlite", "./data/db.sqlite")
+func Init(path string) (d Data, err error) {
+	db, err := sql.Open("sqlite", path)
 	if util.Check(err) {
 		return
 	}
@@ -29,6 +30,7 @@ func Init() (d Data, err error) {
 		Checkpoints:             checkpoints{DB: db},
 		ParticipantsCheckpoints: participantsCheckpoints{DB: db},
 		CheckpointDependencies:  checkpointDependencies{DB: db},
+		DB:                      db,
 	}
 
 	d.Participants.Create()

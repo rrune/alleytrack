@@ -3,11 +3,13 @@ package models
 import "time"
 
 type config struct {
+	Url           string `yaml:"url"`
 	Enabled       bool   `yaml:"enabled"`
 	Port          string `yaml:"port"`
 	JwtKey        string `yaml:"jwtKey"`
 	LogoText      string `yaml:"logoText"`
 	AdminPassword string `yaml:"adminPassword"`
+	RemovalDate   string `yaml:"removalDate"`
 }
 
 type Alleycat struct {

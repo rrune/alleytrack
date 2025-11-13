@@ -1,6 +1,8 @@
+url: "https://example.com/"
 enabled: true
 port: "8080"
 jwtKey: "jwwwt"
 adminPassword: "alleytrack"
 
 logoText: "Alleytrack"
+removalDate: "01.01.1970"

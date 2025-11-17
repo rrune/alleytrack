@@ -27,7 +27,6 @@ func Init(alleycat *models.Alleycat, data *data.Data) (err error) {
 			return timestamp.In(loc).Format("15:04:05")
 		},
 	)
-	engine.Reload(true)
 
 	app := fiber.New(fiber.Config{
 		Views:       engine,
